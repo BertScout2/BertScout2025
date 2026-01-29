@@ -1,0 +1,12 @@
+﻿Have three sub-forms:
+	Auto -> Next
+	Tele -> Next
+	Endgame -> Done
+
+For buttons, have a color border and another internal color
+
+add back list refresh button
+
+make "+" buttons wider
+
+check for deleted items and exclude
