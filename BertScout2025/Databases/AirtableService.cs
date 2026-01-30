@@ -2,17 +2,18 @@
 using BertScout2025.Models;
 using System.Reflection;
 using System.Text;
+using static BertScout2025.Utilities.EncodeDecode;
 
 namespace BertScout2025.Databases;
 
 public class AirtableService
 {
     // This is the Airtable base and table keys. A new base and table has to be created each year, with new keys.
-    private const string AIRTABLE_BASE = "<base>";
-    private const string AIRTABLE_TABLE = "<table>";
+    private const string AIRTABLE_BASE_BASE64 = "YXBwMzdyZlZua1NJWk5sNG0=";
+    private const string AIRTABLE_TABLE_BASE64 = "dGJsYXg5MkxaYjdSOUhESXo=";
 
     // This is the Airtable token converted to Base64. This has to be done manually and inserted here.
-    private const string AIRTABLE_TOKEN_BASE64 = "<token>";
+    private const string AIRTABLE_TOKEN_BASE64 = "cGF0OGE1Mk9IVHpvRU1GUVIuZWVkYzQzMTUxMmNhMmVjM2ZkZTVhMDhhMzU4YmMxMjVlMWRhOGU0ZWI4Njk5Mzk1OTZkZmE1NzcyYjc3NTAyNw==";
 
     private static string AIRTABLE_TOKEN
     {
@@ -33,7 +34,7 @@ public class AirtableService
         Type myType = typeof(TeamMatch);
         myFieldInfo = myType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
-        using AirtableBase airtableBase = new(AIRTABLE_TOKEN, AIRTABLE_BASE);
+        using AirtableBase airtableBase = new(AIRTABLE_TOKEN, Base64Decode(AIRTABLE_BASE_BASE64));
 
         foreach (TeamMatch match in matches)
         {
@@ -133,7 +134,7 @@ public class AirtableService
                 sendList.Add(newRecordList[0]);
                 newRecordList.RemoveAt(0);
             } while (newRecordList.Count > 0 && sendList.Count < 10);
-            result = await airtableBase.CreateMultipleRecords(AIRTABLE_TABLE, sendList.ToArray());
+            result = await airtableBase.CreateMultipleRecords(Base64Decode(AIRTABLE_TABLE_BASE64), sendList.ToArray());
             if (!result.Success)
             {
                 return finalCount; // some may have sent
@@ -172,7 +173,7 @@ public class AirtableService
                 sendList.Add(updatedRecordList[0]);
                 updatedRecordList.RemoveAt(0);
             } while (updatedRecordList.Count > 0 && sendList.Count < 10);
-            result = await airtableBase.UpdateMultipleRecords(AIRTABLE_TABLE, sendList.ToArray());
+            result = await airtableBase.UpdateMultipleRecords(Base64Decode(AIRTABLE_TABLE_BASE64), sendList.ToArray());
             if (!result.Success)
             {
                 return finalCount; // some may have sent
